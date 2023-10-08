@@ -1,42 +1,35 @@
-import { Component } from 'react';
 import { Form as ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
 import { StyledFilter } from './ContactList/ContactList.styled';
-
 import { nanoid } from 'nanoid';
 import { Filter } from './filter/Filter';
+import { useEffect, useState } from 'react';
 
-export class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
+const localStorageKey = 'contacts';
 
-  componentDidMount() { 
-    // console.log('componentDidMount')
-    const contacts = localStorage.getItem('contacts');
-    const parseContacts = JSON.parse(contacts)
-    console.log(parseContacts);
-    if (parseContacts !== null) {
-   this.setState({ contacts: parseContacts});
-}
-   };
+const contactsArray = () => {
+  const savedContacts = localStorage.getItem(localStorageKey);
+  if (savedContacts !== null) {
+    return JSON.parse(savedContacts);
+  }
+  return [
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ];
+};
 
-  componentDidUpdate(prevProps, prevState) { 
-    console.log('componentDidUpdate');
-        if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-          }
-  } 
+export const App = () => {
+  const [contacts, setContacts] = useState(contactsArray());
 
-  addContact = newContact => {
-    const { contacts } = this.state;
-    // const nameToLower = newContact.name.toLowerCase();
+  const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(contacts));
+  }, [contacts]);
+
+  const addContact = newContact => {
     const contactWithId = { ...newContact, id: nanoid() };
 
     if (
@@ -47,48 +40,41 @@ export class App extends Component {
     ) {
       alert(`${contactWithId.name} is already in contacts`);
     } else {
-      this.setState(prevState => ({
-        contacts: [...prevState.contacts, contactWithId],
-      }));
+      setContacts(prevState => [...prevState, contactWithId]);
     }
   };
 
-  handleFilterChange = event => {
-    this.setState({ filter: event.target.value });
-  };
-
-  onDelete = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+  const handleFilterChange = event => {
+    setFilter(prevState => ({
+      ...prevState,
+      filter: event.target.value,
     }));
   };
 
-  onDeleteContact = contactId => {
-    this.onDelete(contactId);
+  const onDelete = contactId => {
+    setContacts(prevState =>
+      prevState.filter(contact => contact.id !== contactId)
+    );
   };
 
-  render() {
-    const { contacts, name, filter } = this.state;
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
-    return (
-      <div>
-        <h1>Phonebook</h1>
-        <ContactForm onAdd={this.addContact} />
-        <StyledFilter>
-          <h2>Contacts</h2>
-          <Filter
-            filter={filter}
-            handleFilterChange={this.handleFilterChange}
-          />
-        </StyledFilter>
-        <ContactList
-          contacts={filteredContacts}
-          name={name}
-          onClick={this.onDeleteContact}
-        />
-      </div>
-    );
-  }
-}
+  const onDeleteContact = contactId => {
+    onDelete(contactId);
+  };
+
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  return (
+    <div>
+      <h1>Phonebook</h1>
+      <ContactForm onAdd={addContact} />
+      <StyledFilter>
+        <h2>Contacts</h2>
+        <Filter filter={filter} handleFilterChange={handleFilterChange} />
+      </StyledFilter>
+
+      <ContactList contacts={filteredContacts} onClick={onDeleteContact} />
+    </div>
+  );
+};

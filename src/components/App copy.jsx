@@ -1,12 +1,12 @@
-import { Component } from 'react';
-import { Form as ContactForm } from './ContactForm/ContactForm';
-import { ContactList } from './ContactList/ContactList';
-import { StyledFilter } from './ContactList/ContactList.styled';
+// import { Component } from 'react';
+// import { Form as ContactForm } from './ContactForm/ContactForm';
+// import { ContactList } from './ContactList/ContactList';
+// import { StyledFilter } from './ContactList/ContactList.styled';
 
-import { nanoid } from 'nanoid';
-import { Filter } from './filter/Filter';
+// import { nanoid } from 'nanoid';
+// import { Filter } from './filter/Filter';
 
-export class App extends Component {
+// export class App extends Component {
   // state = {
     // contacts: [
     //   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -64,7 +64,7 @@ export class App extends Component {
   //   this.onDelete(contactId);
   // };
 
-  render() {
+  // render() {
     // const { contacts, name, filter } = this.state;
     // const filteredContacts = contacts.filter(contact =>
     //   contact.name.toLowerCase().includes(filter.toLowerCase())
@@ -87,5 +87,5 @@ export class App extends Component {
     //     />
     //   </div>
     // );
-  }
-}
+//   }
+// }

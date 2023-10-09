@@ -45,10 +45,7 @@ export const App = () => {
   };
 
   const handleFilterChange = event => {
-    setFilter(prevState => ({
-      ...prevState,
-      filter: event.target.value,
-    }));
+    setFilter(event.target.value);
   };
 
   const onDelete = contactId => {
@@ -60,9 +57,12 @@ export const App = () => {
   const onDeleteContact = contactId => {
     onDelete(contactId);
   };
+
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+
 
   return (
     <div>

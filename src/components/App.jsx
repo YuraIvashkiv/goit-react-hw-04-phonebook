@@ -60,7 +60,6 @@ export const App = () => {
   const onDeleteContact = contactId => {
     onDelete(contactId);
   };
-
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
